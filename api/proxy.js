@@ -1,6 +1,6 @@
 // /api/proxy.js
 export default async function handler(req, res) {
-  const POWER_AUTOMATE_URL = "https://defaulte50a768fa1f54782902f745f77d641.64.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c438238525654f3d8ce8116ac4c056b4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=On-PxZNZ2lYFa5wA1-aXFoLMjD1Lru9GQTLeLLx4FgE"; // tu URL de Power Automate
+  const POWER_AUTOMATE_URL = "https://defaulte50a768fa1f54782902f745f77d641.64.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/827f11e62bc64e8683b7b4a3ddad2241/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qwn8yH0NrngNJgMEO5vWEBn5VLXMPaUwVLBH6gnBjgU"; // tu URL de Power Automate
 
   try {
     const response = await fetch(POWER_AUTOMATE_URL);
