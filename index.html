@@ -354,11 +354,13 @@
       if(!dataToSend.phone) dataToSend.phone = "";
 
       try {
+        console.log(JSON.stringify(dataToSend))
         const res = await fetch(ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(dataToSend)
         });
+        console.log(res)
         if (res.ok) {
           
           msg.textContent = ''
