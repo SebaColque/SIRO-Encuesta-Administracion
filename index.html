@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Encuesta - SIRO</title>
+
+  <link rel="icon" href="./favicon.ico" />
+
+  <style>
+    :root{
+      --green: #066937;
+      --yellow: #F3AC33;
+      --light: #EFF1F0;
+      --text: #0b2b20;
+      --card-radius: 12px;
+    }
+    
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background:var(--light);
+      color:var(--text);
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:18px;
+      box-sizing:border-box;
+      -webkit-font-smoothing:antialiased;
+      font-size:16px;
+    }
+    .wrap{width:100%;max-width:720px;margin:18px auto 80px}
+    .card{
+      background:#fff;
+      border-radius:var(--card-radius);
+      box-shadow:0 8px 24px rgba(6,105,55,0.06);
+      padding:20px;
+      box-sizing:border-box;
+      border:1px solid rgba(6,105,55,0.06);
+      transition: all 0.6s ease;
+      overflow:hidden;
+      animation: fadeInUp 0.8s ease both;
+    }
+    @keyframes fadeInUp {
+      from {opacity:0; transform: translateY(20px);} 
+      to {opacity:1; transform: translateY(0);} 
+    }
+    
+    .hdr{display:flex;gap:12px;align-items:center;margin-bottom:8px;justify-content:center}
+    .logo{
+      width:120px;height:120px;border-radius:14px;background:#fff;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      flex-shrink:0;
+      box-shadow: 0 6px 18px rgba(6,105,55,0.06);
+      border:1px solid rgba(6,105,55,0.06);
+    }
+    .logo img{width:84%;height:84%;object-fit:contain;display:block}
+
+    .subtitle{font-size:13px;margin:0;color:#2f3f36}
+    h1{font-size:18px;margin:6px 0 8px; text-align:center; color: var(--green);}
+    p.lead{font-size:13px;margin:0 0 16px;color:#425148}
+
+    
+    .question-block{
+      margin-top:35px;
+      animation: fadeInUp 0.9s ease both;
+    }
+
+    .question-block.contacto{
+      margin-top:22px;
+    }
+
+    label{display:block;font-size:14px;color:#24332a}
+    .radio-row{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .radio-btn{
+      display:flex;gap:10px;align-items:center;padding:12px;
+      border-radius:10px;border:1px solid #d6e1dc;background:#fafafa;cursor:pointer;
+      transition: all 0.18s ease;
+      user-select:none;
+    }
+    .radio-btn{
+      display:flex;
+      gap:0;
+      align-items:center;
+      padding:12px;
+    }
+    .radio-btn:hover{
+      background:#fff;
+      box-shadow:0 4px 10px rgba(0,0,0,0.06);
+      transform:translateY(-2px);
+    }
+    .radio-btn input[type="radio"]{
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #cfd8d3;
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      cursor: pointer;
+      vertical-align: middle;
+      background: transparent;
+      outline: none;
+    }
+    .radio-btn input[type="radio"]{
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+      opacity: 0;
+    }
+    .radio-btn span{
+      margin-left: 12px;
+    }
+    .radio-btn input[type="radio"]:focus{
+      box-shadow: 0 0 0 3px rgba(6,105,55,0.12);
+    }
+
+    .radio-btn.selected span{
+      color: #fff;
+    }
+
+    
+    .radio-btn.selected{
+      background: var(--green);
+      color: #fff;
+      border-color: rgba(6,105,55,0.20);
+      box-shadow: none;
+    }
+    .radio-btn.selected input[type="radio"]{
+      border-color: rgba(255,255,255,0.95);
+      background: transparent;
+    }
+    .radio-btn span{font-size:14px}
+
+    
+    .field{width:100%;padding:10px;border-radius:10px;border:1px solid #e7ebe8;
+      margin-top:8px;box-sizing:border-box;background:#fff;transition:border 0.2s ease; font-size:16px}
+    .field:focus{border:1px solid var(--green);outline:none;box-shadow:0 0 0 2px rgba(6,105,55,0.12); scroll-margin-top:120px}
+
+    
+    .btn{
+      display:inline-block;width:100%;text-align:center;padding:12px 14px;border-radius:10px;
+      border:0;background:var(--green);color:#fff;font-weight:600;margin-top:24px;cursor:pointer;
+      font-size:16px;transition: background 0.3s, transform 0.2s;
+    }
+    .btn:hover{background:#05582b; transform:scale(1.02)}
+    .muted{font-size:12px;color:#6a736c;margin-top:10px}
+    #msg{margin-top:14px;font-size:14px}
+
+    
+    .card.success{
+      background: var(--green);
+      color: #fff;
+      text-align:center;
+      padding:40px 20px;
+      animation: popIn 0.6s ease both;
+
+      
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 600px;
+      border-radius: var(--card-radius);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    @keyframes popIn {
+      from {opacity:0; transform:scale(0.8);} 
+      to {opacity:1; transform:scale(1);} 
+    }
+    .card.success .logo-success{
+      animation: bounce 1s ease infinite alternate;
+      width:120px;
+      height:auto;
+      margin:0 auto 16px;
+    }
+    @keyframes bounce {
+      from {transform: translateY(0);} 
+      to {transform: translateY(-6px);} 
+    }
+    .card.success .logo-success img{width:100%;height:auto;object-fit:contain;display:block}
+    .card.success h2{font-size:22px;margin:0 0 8px;}
+    .card.success p{margin:0;font-size:15px;}
+
+    
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.28);
+      z-index: 9999;
+      animation: overlayFade 0.18s ease;
+    }
+
+    @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+
+    
+    .modal { background: var(--green); color: #fff; width: min(92%, 640px); border-radius: 14px; padding: 28px 22px; box-shadow: 0 18px 40px rgba(6, 105, 55, 0.25); text-align: center; transform: translateY(10px) scale(0.98); opacity: 0; animation: modalPop 420ms cubic-bezier(.16,.84,.44,1) forwards; }
+
+    @keyframes modalPop { to { transform: translateY(0) scale(1); opacity: 1; } }
+    .modal .logo-success{ width: 140px; height: auto; margin: 0 auto 14px; }
+    .modal .logo-success img{ width: 100%; height: auto; object-fit: contain; display:block }
+    .modal h2{ font-size:20px; margin:8px 0 6px; font-weight:700; letter-spacing:0.2px }
+    .modal p{ margin:0;color:rgba(255,255,255,0.95); font-size:14px }
+    .modal .close-btn{ margin-top:14px; display:inline-block; background:rgba(255,255,255,0.12); color:#fff; padding:8px 14px; border-radius:8px; border:0; cursor:pointer; font-weight:600; }
+
+    .card.blur { filter: blur(3px) saturate(.95); transition: filter 220ms ease; pointer-events: none; user-select: none; }
+
+    
+    @media (max-width:420px){
+      .logo{ width:96px; height:96px }
+      h1{ font-size:17px }
+      .radio-btn{ padding:10px }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="pageTitle" id="cardBox">
+      <div class="hdr">
+        <div class="logo" aria-hidden="true">
+          <img src="./logo-siro.png" alt="SIRO logo"/>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 16px;">
+        <h2 style="font-size: 24px; font-weight: 800; margin: 0;">
+          <span style="color: #000;">¡COBRÁ CON </span>
+          <span style="color: #066937;">TODOS LOS MEDIOS DE PAGO!</span>
+        </h2>
+      </div>
+
+      <div class="image-container" style="text-align: center; margin-top: 20px;">
+        <img src="./ruleta.png" alt="Ruleta SIRO" style="max-width: 100%; height: auto;" />
+      </div>
+
+
+      <h1 id="pageTitle">Nos interesa conocer tu experiencia con las cobranzas</h1>
+
+
+
+      <form id="leadForm" autocomplete="off">
+
+        <!-- DATOS -->
+        <div class="question-block contacto">
+          <label><b>Nombre y Apellido</b></label>
+          <input class="field" name="fullname" type="text" placeholder="Escribe tu nombre completo" required />
+        </div>
+
+        <div class="question-block contacto">
+          <label><b>Institución que representa</b></label>
+          <input class="field" name="institution" type="text" placeholder="Indica la institución que representas" required />
+        </div>
+
+        <div class="question-block contacto">
+          <label><b>Teléfono</b></label>
+          <input class="field" name="phone" type="tel" inputmode="numeric" pattern="[0-9]+" placeholder="Ingresa tu número de contacto" required />
+        </div>
+
+
+        <!-- P1 -->
+        <div class="question-block">
+          <label><b>1- ¿Cómo viene la morosidad de tu colegio?</b></label>
+          <div class="radio-row" data-group="q1">
+            <label class="radio-btn"><input type="radio" name="q1" value="Baja" required/> <span>Baja</span></label>
+            <label class="radio-btn"><input type="radio" name="q1" value="Media" required/> <span>Media</span></label>
+            <label class="radio-btn"><input type="radio" name="q1" value="Alta" required/> <span>Alta</span></label>
+          </div>
+        </div>
+
+        <!-- P2 -->
+        <div class="question-block">
+          <label><b>2- ¿Cómo hacés las conciliaciones de cobranzas de tu colegio?</b></label>
+          <div class="radio-row" data-group="q2">
+            <label class="radio-btn"><input type="radio" name="q2" value="A mano" required/> <span>A mano</span></label>
+            <label class="radio-btn"><input type="radio" name="q2" value="Con mi sistema de autogestion" required/> <span>Con mi sistema de autogestión</span></label>
+            <label class="radio-btn"><input type="radio" name="q2" value="Todo automatizado" required/> <span>Todo automatizado</span></label>
+          </div>
+        </div>
+
+        <!-- P3 -->
+        <div class="question-block">
+          <label><b>3- ¿Consideras que tenés resuelta la cobranza de tu colegio?</b></label>
+          <div class="radio-row" data-group="q3">
+            <label class="radio-btn"><input type="radio" name="q3" value="Si" required/> <span>Si</span></label>
+            <label class="radio-btn"><input type="radio" name="q3" value="No quiero mejorarla" required/> <span>No, y tampoco quiero mejorarla</span></label>
+            <label class="radio-btn"><input type="radio" name="q3" value="Me gustara saber como automatizar el proceso" required/> <span>No, pero me gustaría saber como automatizar el proceso</span></label>
+          </div>
+        </div>
+
+        <input type="hidden" name="campaign" value="standA" />
+        <button id="submitBtn" class="btn" type="submit">Enviar</button>
+        <div id="msg" class="muted" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ENDPOINT = "https://defaulte50a768fa1f54782902f745f77d641.64.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fdc421922b074f4689709fb7f59f3fba/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VJd8j1OB3bIEqIgtREYLaf4EV6-AG2lmQ2JXGRHjJTQ"; // cambia aquí
+    const form = document.getElementById('leadForm');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('submitBtn');
+    const card = document.getElementById('cardBox');
+
+    
+    function initRadioSelection() {
+      document.querySelectorAll('.radio-row').forEach(row => {
+        
+        row.addEventListener('change', () => updateSelected(row));
+        
+        row.addEventListener('click', (ev) => {
+          const input = ev.target.closest('input[type="radio"]');
+          if (input) updateSelected(row);
+        });
+        
+        updateSelected(row);
+      });
+    }
+
+    function updateSelected(row) {
+      const labels = Array.from(row.querySelectorAll('.radio-btn'));
+      labels.forEach(lbl => lbl.classList.remove('selected'));
+
+      const checked = row.querySelector('input[type="radio"]:checked');
+      if (checked) {
+        const parentLabel = checked.closest('.radio-btn');
+        if (parentLabel) parentLabel.classList.add('selected');
+      }
+    }
+
+    initRadioSelection();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      msg.textContent = 'Enviando...';
+
+      const dataToSend = Object.fromEntries(new FormData(form).entries());
+      if(!dataToSend.phone) dataToSend.phone = "";
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataToSend)
+        });
+        if (res.ok) {
+          
+          msg.textContent = ''
+          showSuccessModal(dataToSend.fullname, './logo-siro-gracias.png', 4000);
+          form.reset();
+          
+          document.querySelectorAll('.radio-btn.selected').forEach(n => n.classList.remove('selected'));
+        } else {
+          msg.textContent = 'Error al enviar. Intentá de nuevo.';
+        }
+      } catch (err){
+        console.log(err)
+        msg.textContent = 'Error de red.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    /* ----------------- helper: mostrar modal de éxito ----------------- */
+    function showSuccessModal(name, logoPath = './logo-siro-gracias.png', autoCloseMs = 3500) {
+      
+      if (document.querySelector('.overlay')) return;
+
+      
+      const cardEl = document.getElementById('cardBox');
+      if (cardEl) cardEl.classList.add('blur');
+
+      
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+
+      
+      overlay.innerHTML = `
+        <div class="modal" role="document">
+          <div class="logo-success"><img src="${logoPath}" alt="SIRO logo"></div>
+          <h2>¡Gracias ${escapeHtml(name || '')}!</h2>
+          <p>Tus respuestas fueron guardadas correctamente.</p>
+          <div style="height:8px"></div>
+          <button class="close-btn" type="button" aria-label="Cerrar">Cerrar</button>
+        </div>
+      `;
+
+      
+      overlay.addEventListener('click', (ev) => {
+        if (ev.target === overlay) removeOverlay();
+      });
+      overlay.querySelector('.close-btn').addEventListener('click', removeOverlay);
+
+      
+      function removeOverlay() {
+        if (cardEl) cardEl.classList.remove('blur');
+        overlay.remove();
+      }
+
+      
+      document.body.appendChild(overlay);
+
+      
+      if (autoCloseMs && autoCloseMs > 0) {
+        setTimeout(removeOverlay, autoCloseMs);
+      }
+    }
+
+    
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    document.addEventListener('touchstart', function(){}, {passive:true});
+
+  </script>
+</body>
+</html>

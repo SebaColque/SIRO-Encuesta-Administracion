@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sorteo SIRO</title>
+
+  <link rel="icon" href="./favicon.ico" />
+
+  <style>
+    :root{
+      --green: #066937;
+      --yellow: #F3AC33;
+      --light: #EFF1F0;
+      --text: #0b2b20;
+      --card-radius: 12px;
+    }
+    
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background:var(--light);
+      color:var(--text);
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:18px;
+      box-sizing:border-box;
+      -webkit-font-smoothing:antialiased;
+      font-size:16px;
+    }
+    .wrap{width:100%;max-width:900px;margin:18px auto 80px}
+    .card{
+      background:#fff;
+      border-radius:var(--card-radius);
+      box-shadow:0 8px 24px rgba(6,105,55,0.06);
+      padding:20px;
+      box-sizing:border-box;
+      border:1px solid rgba(6,105,55,0.06);
+      transition: all 0.6s ease;
+      overflow:hidden;
+      animation: fadeInUp 0.8s ease both;
+    }
+    @keyframes fadeInUp {
+      from {opacity:0; transform: translateY(20px);} 
+      to {opacity:1; transform: translateY(0);} 
+    }
+    
+    .hdr{display:flex;gap:12px;align-items:center;margin-bottom:8px;justify-content:center}
+    .logo{
+      width:120px;height:120px;border-radius:14px;background:#fff;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      flex-shrink:0;
+      box-shadow: 0 6px 18px rgba(6,105,55,0.06);
+      border:1px solid rgba(6,105,55,0.06);
+    }
+    .logo img{width:84%;height:84%;object-fit:contain;display:block}
+
+    h1{font-size:24px;margin:6px 0 8px; text-align:center; color: var(--green);}
+    .subtitle{font-size:14px;margin:0 0 20px;color:#425148;text-align:center;}
+
+    .nav-links{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:20px;
+    }
+    .nav-link{
+      padding:8px 16px;
+      background:var(--light);
+      color:var(--text);
+      text-decoration:none;
+      border-radius:8px;
+      font-size:14px;
+      transition:all 0.2s ease;
+    }
+    .nav-link:hover{
+      background:var(--green);
+      color:#fff;
+    }
+
+    .controls{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+    
+    .btn{
+      display:inline-block;
+      text-align:center;
+      padding:12px 24px;
+      border-radius:10px;
+      border:0;
+      background:var(--green);
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      font-size:16px;
+      transition: all 0.3s ease;
+      text-decoration:none;
+    }
+    .btn:hover{
+      background:#05582b; 
+      transform:scale(1.05);
+    }
+    .btn:disabled{
+      background:#ccc;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .btn.secondary{
+      background:var(--yellow);
+      color:var(--text);
+    }
+    .btn.secondary:hover{
+      background:#e09a1f;
+    }
+
+    .participants-section{
+      margin-top:20px;
+    }
+    .participants-count{
+      text-align:center;
+      font-size:18px;
+      font-weight:600;
+      color:var(--green);
+      margin-bottom:15px;
+    }
+
+    .participants-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+      gap:12px;
+      margin-bottom:20px;
+    }
+    .participant-card{
+      background:#f8f9fa;
+      border:1px solid #e9ecef;
+      border-radius:8px;
+      padding:12px;
+      transition:all 0.2s ease;
+    }
+    .participant-card:hover{
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      transform:translateY(-2px);
+    }
+    .participant-name{
+      font-weight:600;
+      color:var(--text);
+      margin-bottom:4px;
+    }
+    .participant-institution{
+      font-size:13px;
+      color:#6c757d;
+    }
+
+    .loading{
+      text-align:center;
+      padding:40px;
+      color:#6c757d;
+    }
+    .spinner{
+      display:inline-block;
+      width:20px;
+      height:20px;
+      border:2px solid #f3f3f3;
+      border-top:2px solid var(--green);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      margin-right:8px;
+    }
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+
+    .error{
+      background:#f8d7da;
+      color:#721c24;
+      padding:12px;
+      border-radius:8px;
+      margin:10px 0;
+      text-align:center;
+    }
+
+    /* Winner Animation Styles */
+    .winner-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      animation:overlayFadeIn 0.5s ease;
+    }
+    @keyframes overlayFadeIn{
+      from{opacity:0}
+      to{opacity:1}
+    }
+
+    .winner-modal{
+      background:linear-gradient(135deg, var(--green), #088a4a);
+      color:#fff;
+      width:min(90%, 600px);
+      border-radius:20px;
+      padding:40px 30px;
+      text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,0.3);
+      animation:winnerPop 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @keyframes winnerPop{
+      0%{transform:scale(0.3) rotate(-10deg); opacity:0}
+      50%{transform:scale(1.1) rotate(5deg)}
+      100%{transform:scale(1) rotate(0deg); opacity:1}
+    }
+
+    .winner-crown{
+      font-size:60px;
+      margin-bottom:20px;
+      animation:crownBounce 2s ease-in-out infinite;
+    }
+    @keyframes crownBounce{
+      0%, 100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .winner-title{
+      font-size:32px;
+      font-weight:700;
+      margin:0 0 10px;
+      text-shadow:2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .winner-name{
+      font-size:28px;
+      font-weight:600;
+      margin:0 0 15px;
+      color:var(--yellow);
+      text-shadow:1px 1px 2px rgba(0,0,0,0.3);
+    }
+    .winner-institution{
+      font-size:18px;
+      margin:0 0 30px;
+      opacity:0.9;
+    }
+
+    .confetti{
+      position:absolute;
+      width:10px;
+      height:10px;
+      background:var(--yellow);
+      animation:confettiFall 3s linear infinite;
+    }
+    @keyframes confettiFall{
+      0%{transform:translateY(-100vh) rotate(0deg); opacity:1}
+      100%{transform:translateY(100vh) rotate(720deg); opacity:0}
+    }
+
+    .roulette-container{
+      margin:20px 0;
+      text-align:center;
+    }
+    .roulette-wheel{
+      display:inline-block;
+      width:200px;
+      height:200px;
+      border:8px solid var(--green);
+      border-radius:50%;
+      position:relative;
+      background:conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd, #98d8c8, #ff7675);
+      animation:rouletteSpin 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    @keyframes rouletteSpin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(1800deg)}
+    }
+    .roulette-pointer{
+      position:absolute;
+      top:-15px;
+      left:50%;
+      transform:translateX(-50%);
+      width:0;
+      height:0;
+      border-left:15px solid transparent;
+      border-right:15px solid transparent;
+      border-top:30px solid var(--text);
+    }
+
+    @media (max-width:480px){
+      .controls{flex-direction:column;align-items:center}
+      .participants-grid{grid-template-columns:1fr}
+      .winner-title{font-size:24px}
+      .winner-name{font-size:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="hdr">
+        <div class="logo" aria-hidden="true">
+          <img src="./logo-siro.png" alt="SIRO logo"/>
+        </div>
+      </div>
+
+      <h1>Sorteo</h1>
+      <!-- <p class="subtitle">Gestiona los participantes y selecciona el ganador del sorteo</p> -->
+
+      <!-- <div class="nav-links">
+        <a href="index.html" class="nav-link">← Volver a la Encuesta</a>
+      </div> -->
+
+      <div class="controls">
+        <button id="loadBtn" class="btn">Cargar Participantes</button>
+        <button id="drawBtn" class="btn secondary" disabled>🎲 Sortear Ganador</button>
+      </div>
+
+      <div id="participantsSection" class="participants-section" style="display:none;">
+        <div id="participantsCount" class="participants-count"></div>
+        <div id="participantsGrid" class="participants-grid"></div>
+      </div>
+
+      <div id="loadingDiv" class="loading" style="display:none;">
+        <div class="spinner"></div>
+        Cargando participantes...
+      </div>
+
+      <div id="errorDiv" class="error" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // TODO: Replace with your Power Automate Response endpoint URL
+    const PARTICIPANTS_ENDPOINT = "/api/proxy"
+
+    let participants = [];
+    
+    const loadBtn = document.getElementById('loadBtn');
+    const drawBtn = document.getElementById('drawBtn');
+    const participantsSection = document.getElementById('participantsSection');
+    const participantsCount = document.getElementById('participantsCount');
+    const participantsGrid = document.getElementById('participantsGrid');
+    const loadingDiv = document.getElementById('loadingDiv');
+    const errorDiv = document.getElementById('errorDiv');
+
+    // Load participants from Power Automate
+    async function loadParticipants() {
+      try {
+        loadingDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+        participantsSection.style.display = 'none';
+        loadBtn.disabled = true;
+
+        const response = await fetch(PARTICIPANTS_ENDPOINT, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // Assuming the response contains an array of participants
+        // Adjust this based on your actual Power Automate response structure
+        participants = data.participants || data || [];
+        
+        displayParticipants();
+        
+      } catch (error) {
+        console.error('Error loading participants:', error);
+        showError('Error al cargar los participantes. Verifica la conexión con Power Automate.');
+      } finally {
+        loadingDiv.style.display = 'none';
+        loadBtn.disabled = false;
+      }
+    }
+
+    // Display participants in the grid
+    function displayParticipants() {
+      if (participants.length === 0) {
+        showError('No se encontraron participantes.');
+        return;
+      }
+
+      participantsCount.textContent = `Total de participantes: ${participants.length}`;
+      
+      participantsGrid.innerHTML = participants.map((participant, index) => `
+        <div class="participant-card" data-index="${index}">
+          <div class="participant-name">${escapeHtml(participant.FullName || participant.nombre || 'Sin nombre')}</div>
+          <div class="participant-institution">${escapeHtml(participant.Institution || participant.institucion || 'Sin institución')}</div>
+        </div>
+      `).join('');
+
+      participantsSection.style.display = 'block';
+      drawBtn.disabled = false;
+    }
+
+    // Random winner selection with animation
+    function drawWinner() {
+      if (participants.length === 0) {
+        showError('No hay participantes para el sorteo.');
+        return;
+      }
+
+      drawBtn.disabled = true;
+      
+      // Show roulette animation
+      showRouletteAnimation(() => {
+        const winnerIndex = Math.floor(Math.random() * participants.length);
+        const winner = participants[winnerIndex];
+        
+        // Highlight winner in the grid
+        document.querySelectorAll('.participant-card').forEach(card => {
+          card.style.background = '#f8f9fa';
+        });
+        document.querySelector(`[data-index="${winnerIndex}"]`).style.background = 'var(--yellow)';
+        
+        // Show winner modal
+        setTimeout(() => {
+          showWinnerModal(winner);
+        }, 1000);
+      });
+    }
+
+    // Show roulette animation
+    function showRouletteAnimation(callback) {
+      const overlay = document.createElement('div');
+      overlay.className = 'winner-overlay';
+      overlay.innerHTML = `
+        <div class="winner-modal">
+          <div class="winner-title">🎰 Seleccionando Ganador...</div>
+          <div class="roulette-container">
+            <div class="roulette-wheel">
+              <div class="roulette-pointer"></div>
+            </div>
+          </div>
+          <p>¡El sorteo está en progreso!</p>
+        </div>
+      `;
+      
+      document.body.appendChild(overlay);
+      
+      setTimeout(() => {
+        overlay.remove();
+        callback();
+      }, 3500);
+    }
+
+    // Show winner modal with confetti
+    function showWinnerModal(winner) {
+      const overlay = document.createElement('div');
+      overlay.className = 'winner-overlay';
+      
+      // Create confetti
+      let confettiHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const left = Math.random() * 100;
+        const delay = Math.random() * 3;
+        const color = ['#F3AC33', '#066937', '#ff6b6b', '#4ecdc4', '#45b7d1'][Math.floor(Math.random() * 5)];
+        confettiHTML += `<div class="confetti" style="left:${left}%; animation-delay:${delay}s; background:${color};"></div>`;
+      }
+      
+      overlay.innerHTML = `
+        ${confettiHTML}
+        <div class="winner-modal">
+          <div class="winner-crown">👑</div>
+          <div class="winner-title">¡GANADOR!</div>
+          <div class="winner-name">${escapeHtml(winner.FullName || winner.nombre || 'Sin nombre')}</div>
+          <div class="winner-institution">${escapeHtml(winner.Institution || winner.institucion || 'Sin institución')}</div>
+          <button class="btn" onclick="closeWinnerModal()">Cerrar</button>
+        </div>
+      `;
+      
+      document.body.appendChild(overlay);
+      
+      // Auto close after 10 seconds
+      setTimeout(() => {
+        if (document.body.contains(overlay)) {
+          overlay.remove();
+          drawBtn.disabled = false;
+        }
+      }, 10000);
+    }
+
+    // Close winner modal
+    function closeWinnerModal() {
+      const overlay = document.querySelector('.winner-overlay');
+      if (overlay) {
+        overlay.remove();
+        drawBtn.disabled = false;
+      }
+    }
+
+    // Show error message
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Event listeners
+    loadBtn.addEventListener('click', loadParticipants);
+    drawBtn.addEventListener('click', drawWinner);
+
+    // Demo data for testing (remove when Power Automate is ready)
+    function loadDemoData() {
+      participants = [
+        { fullname: "Juan Pérez", institution: "Colegio San Martín" },
+        { fullname: "María González", institution: "Instituto Nacional" },
+        { fullname: "Carlos Rodríguez", institution: "Escuela Técnica" },
+        { fullname: "Ana López", institution: "Colegio Belgrano" },
+        { fullname: "Pedro Martínez", institution: "Instituto Superior" }
+      ];
+      displayParticipants();
+    }
+
+    // Uncomment the line below to test with demo data
+    // loadDemoData()
+  </script>
+</body>
+</html>
